@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--识物视频图片缩略画廊-->
+    <declare-styleable name="MaxPullUpScrollView">
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
+</resources>

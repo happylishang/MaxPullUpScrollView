@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+
+
+
+    <com.snail.labaffinity.view.MaxPullUpScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        app:maxHeight="300dp"
+        app:minHeight="100dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="dasf" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="dasf" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="com.snail.labaffinity.act
+            ivity.MaxPullUpScrollViewcom.snail.labaffinity
+            .activity.MaxPullUpScrollViewcom.snail.labaffin
+            ity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.laba
+            ffinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.labaffini
+            ty.activity.MaxPullUpScrollV
+                    ivity.MaxPullUpScrollViewcom.snail.labaffinity
+            .activity.MaxPullUpScrollViewcom.snail.labaffin
+            ity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.laba
+            ffinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.labaffini
+            ty.activity.MaxPullUpScrollViewcom.snail.labaffinity.act
+            ivity.MaxPullUpScrollViewcom.snail.labaffinity.ac
+                    ivity.MaxPullUpScrollViewcom.snail.labaffinity
+            .activity.MaxPullUpScrollViewcom.snail.labaffin
+            ity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.laba
+            ffinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.labaffini
+            ty.activity.MaxPullUpScrollViewcom.snail.labaffinity.act
+            ivity.MaxPullUpScrollViewcom.snail.labaffinity.ac
+                    ivity.MaxPullUpScrollViewcom.snail.labaffinity
+            .activity.MaxPullUpScrollViewcom.snail.labaffin
+            ity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.laba
+            ffinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.lab
+            affinity.activity.MaxPullUpScrollViewcom.snail.labaf
+            finity.activity.MaxPullUpScrollViewcom.snail.labaffini
+            ty.activity.MaxPullUpScrollViewcom.snail.labaffinity.act
+            ivity.MaxPullUpScrollViewcom.snail.labaffinity.aciewcom.snail.labaffinity.act
+            ivity.MaxPullUpScrollViewcom.snail.labaffinity.ac
+            tivity.MaxPullUpScrollView" />
+        </LinearLayout>
+
+    </com.snail.labaffinity.view.MaxPullUpScrollView>
+</RelativeLayout>
