@@ -17,7 +17,7 @@ import com.snail.labaffinity.R;
 import com.snail.labaffinity.utils.LogUtils;
 
 
-public class MaxPullUpScrollView extends FrameLayout {
+public class MaxPullUpScrollView2 extends FrameLayout {
 
 
     private int mMaxHeight;
@@ -42,13 +42,12 @@ public class MaxPullUpScrollView extends FrameLayout {
         mFlingSpeed = velocityY / FACTOR;
         float maxScrollDistance;
         final int maxHeight = Math.min(mContentHeight, mMaxHeight);
-        int scrollY = mScrollView == null ? getScrollY() : mScrollView.getScrollY();
         if (mFlingSpeed >= 0) {
             //  向下滚动
-            maxScrollDistance = Math.min(Math.max(scrollY, 0) + getMeasuredHeight() - mMinHeight, mFlingSpeed);
+            maxScrollDistance = Math.min(Math.max(getScrollY(), 0) + getMeasuredHeight() - mMinHeight, mFlingSpeed);
         } else {
             // 向上滚动
-            maxScrollDistance = Math.max(-(Math.max(mContentHeight - scrollY - maxHeight, 0) + maxHeight - getMeasuredHeight()), mFlingSpeed);
+            maxScrollDistance = Math.max(-(Math.max(mContentHeight - getScrollY() - maxHeight, 0) + maxHeight - getMeasuredHeight()), mFlingSpeed);
         }
         LogUtils.v("mFlingSpeed " + mFlingSpeed + " maxScrollDistance " + maxScrollDistance + " mContentHeight " + mContentHeight + " getMeasuredHeight " + getMeasuredHeight() + " getScrollY " + getScrollY());
         mValueAnimator = ValueAnimator.ofFloat(0, maxScrollDistance);
@@ -69,44 +68,26 @@ public class MaxPullUpScrollView extends FrameLayout {
                     distance += (int) (totalFloat - totalInt);
                     totalFloat -= (int) (totalFloat - totalInt);
                 }
-                int scrollY = mScrollView == null ? getScrollY() : mScrollView.getScrollY();
-                if (scrollY == 0) {
+                if (getScrollY() == 0) {
                     if ((getMeasuredHeight() + distance) <= mMinHeight) {
                         getLayoutParams().height = mMinHeight;
                     } else if ((getMeasuredHeight() + distance) >= maxHeight) {
                         getLayoutParams().height = maxHeight;
-
-                        if (mScrollView != null) {
-                            mScrollView.scrollBy(0, (int) (getMeasuredHeight() + distance - maxHeight));
-                        } else {
-                            scrollBy(0, (int) (getMeasuredHeight() + distance - maxHeight));
-                        }
-
+                        scrollBy(0, (int) (getMeasuredHeight() + distance - maxHeight));
                     } else {
                         getLayoutParams().height = (int) (getMeasuredHeight() + distance);
                     }
                     requestLayout();
                 } else {
-                    if (scrollY + distance <= 0) {
-                        if (mScrollView != null) {
-                            mScrollView.scrollTo(0, 0);
-                        } else {
-                            scrollTo(0, 0);
-                        }
-
-
-                        getLayoutParams().height += scrollY + distance;
+                    if (getScrollY() + distance <= 0) {
+                        scrollTo(0, 0);
+                        getLayoutParams().height += getScrollY() + distance;
                         requestLayout();
-                    } else if (scrollY + distance > mContentHeight - maxHeight) {
+                    } else if (getScrollY() + distance > mContentHeight - maxHeight) {
                         getLayoutParams().height = maxHeight;
                         requestLayout();
                     } else {
-
-                        if (mScrollView != null) {
-                            mScrollView.scrollBy(0, (int) distance);
-                        } else {
-                            scrollBy(0, (int) distance);
-                        }
+                        scrollBy(0, (int) distance);
                     }
 
                 }
@@ -116,15 +97,15 @@ public class MaxPullUpScrollView extends FrameLayout {
         mValueAnimator.start();
     }
 
-    public MaxPullUpScrollView(@NonNull Context context) {
+    public MaxPullUpScrollView2(@NonNull Context context) {
         this(context, null);
     }
 
-    public MaxPullUpScrollView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MaxPullUpScrollView2(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public MaxPullUpScrollView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MaxPullUpScrollView2(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MaxPullUpScrollView, defStyleAttr, 0);
@@ -177,33 +158,16 @@ public class MaxPullUpScrollView extends FrameLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = ev.getRawY() - mDownY;
-                int scrollY = mScrollView == null ? getScrollY() : mScrollView.getScrollY();
-
-                if (getMeasuredHeight() < maxHeight || (distance > 0 && scrollY <= 0)) {
+                if (getMeasuredHeight() < maxHeight || (distance > 0 && getScrollY() <= 0)) {
                     getLayoutParams().height = Math.min(Math.max(mMinHeight, Math.min((int) (getMeasuredHeight() - distance), maxHeight)), maxHeight);
                     requestLayout();
-                    if (mScrollView != null) {
-                        mScrollView.scrollTo(0, 0);
-                    } else {
-                        scrollTo(0, 0);
-                    }
-
+                    scrollTo(0, 0);
                 } else {
                     if (mContentHeight > maxHeight) {
-                        if (scrollY - distance < mContentHeight - maxHeight) {
-                            if (mScrollView != null) {
-                                mScrollView.scrollBy(0, (int) -distance);
-                            } else {
-                                scrollBy(0, (int) -distance);
-                            }
-
+                        if (getScrollY() - distance < mContentHeight - maxHeight) {
+                            scrollBy(0, (int) -distance);
                         } else {
-                            if (mScrollView != null) {
-                                mScrollView.scrollTo(0, mContentHeight - maxHeight);
-                            } else {
-                                scrollTo(0, mContentHeight - maxHeight);
-                            }
-
+                            scrollTo(0, mContentHeight - maxHeight);
                         }
                     }
                 }

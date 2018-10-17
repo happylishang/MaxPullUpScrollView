@@ -13,10 +13,8 @@
     tools:showIn="@layout/activity_main">
 
 
-
-
-
     <com.snail.labaffinity.view.MaxPullUpScrollView
+        android:id="@+id/mv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -41,6 +39,7 @@
                 android:text="dasf" />
 
             <TextView
+                android:id="@+id/tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
@@ -89,4 +88,5 @@
         </LinearLayout>
 
     </com.snail.labaffinity.view.MaxPullUpScrollView>
+
 </RelativeLayout>
