@@ -22,35 +22,49 @@ public class MaxPullUpScrollView extends FrameLayout {
 
     private int mMaxHeight;
     private int mMinHeight;
-    private final static int FACTOR = 4;
+    private final static int FACTOR = 1;
     private int mContentHeight;
-    private float mFlingSpeed;
     private float mDownY;
+    private float mLastY;
     private boolean hasTouched;
     private ValueAnimator mValueAnimator;
-
+    private float mLastScrollY1;
+    private float mLastScrollY2;
+    private long mLastScrollTimeY1;
+    private long mLastScrollTimeY2;
     private GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            float speed = (e2.getRawY() - e1.getRawY()) * 1000 / (e2.getEventTime() - e1.getEventTime());
-            fling(speed);
+            if (mLastScrollY2 != mLastScrollY1 && mLastScrollTimeY1 != mLastScrollTimeY2) {
+                float speed = (mLastScrollY2 - mLastScrollY1) * 1000 / (mLastScrollTimeY2 - mLastScrollTimeY1);
+                fling(speed);
+            }
             return super.onFling(e1, e2, velocityX, velocityY);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            mLastScrollY1 = mLastScrollY2;
+            mLastScrollTimeY1 = mLastScrollTimeY2;
+            mLastScrollTimeY2 = e2.getEventTime();
+            mLastScrollY2 = e2.getRawY();
+            return super.onScroll(e1, e2, distanceX, distanceY);
         }
     });
 
     private void fling(final float velocityY) {
-        mFlingSpeed = velocityY / FACTOR;
+        float flingSpeed = velocityY / FACTOR;
         float maxScrollDistance;
         final int maxHeight = Math.min(mContentHeight, mMaxHeight);
         int scrollY = mScrollView == null ? getScrollY() : mScrollView.getScrollY();
-        if (mFlingSpeed >= 0) {
+        if (flingSpeed >= 0) {
             //  向下滚动
-            maxScrollDistance = Math.min(Math.max(scrollY, 0) + getMeasuredHeight() - mMinHeight, mFlingSpeed);
+            maxScrollDistance = Math.min(Math.max(scrollY, 0) + getMeasuredHeight() - mMinHeight, flingSpeed);
         } else {
             // 向上滚动
-            maxScrollDistance = Math.max(-(Math.max(mContentHeight - scrollY - maxHeight, 0) + maxHeight - getMeasuredHeight()), mFlingSpeed);
+            maxScrollDistance = Math.max(-(Math.max(mContentHeight - scrollY - maxHeight, 0) + maxHeight - getMeasuredHeight()), flingSpeed);
         }
-        LogUtils.v("mFlingSpeed " + mFlingSpeed + " maxScrollDistance " + maxScrollDistance + " mContentHeight " + mContentHeight + " getMeasuredHeight " + getMeasuredHeight() + " getScrollY " + getScrollY());
+        LogUtils.v("mFlingSpeed " + flingSpeed + " maxScrollDistance " + maxScrollDistance + " mContentHeight " + mContentHeight + " getMeasuredHeight " + getMeasuredHeight() + " getScrollY " + getScrollY());
         mValueAnimator = ValueAnimator.ofFloat(0, maxScrollDistance);
         mValueAnimator.setInterpolator(new DecelerateInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -162,6 +176,7 @@ public class MaxPullUpScrollView extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
@@ -174,9 +189,10 @@ public class MaxPullUpScrollView extends FrameLayout {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDownY = ev.getRawY();
+                mLastY = mDownY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float distance = ev.getRawY() - mDownY;
+                float distance = ev.getRawY() - mLastY;
                 int scrollY = mScrollView == null ? getScrollY() : mScrollView.getScrollY();
 
                 if (getMeasuredHeight() < maxHeight || (distance > 0 && scrollY <= 0)) {
@@ -207,9 +223,10 @@ public class MaxPullUpScrollView extends FrameLayout {
                         }
                     }
                 }
+                LogUtils.v("mLastY " + mLastY);
+                mLastY = ev.getRawY();
                 break;
         }
-        mDownY = ev.getRawY();
         super.dispatchTouchEvent(ev);
         return true;
     }
