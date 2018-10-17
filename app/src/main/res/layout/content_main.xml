@@ -19,19 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
-        app:maxHeight="300dp"
-        app:minHeight="100dp">
+        app:maxHeight="143dp"
+        app:minHeight="78dp">
 
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="dasf" />
 
             <Button
                 android:layout_width="match_parent"

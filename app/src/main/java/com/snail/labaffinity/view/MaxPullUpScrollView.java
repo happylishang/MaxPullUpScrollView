@@ -76,15 +76,6 @@ public class MaxPullUpScrollView extends FrameLayout {
             }
             return super.onFling(e1, e2, velocityX, velocityY);
         }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            mLastScrollY1 = mLastScrollY2;
-            mLastScrollTimeY1 = mLastScrollTimeY2;
-            mLastScrollTimeY2 = e2.getEventTime();
-            mLastScrollY2 = e2.getRawY();
-            return super.onScroll(e1, e2, distanceX, distanceY);
-        }
     });
 
     private void fling(final float velocityY) {
@@ -177,6 +168,8 @@ public class MaxPullUpScrollView extends FrameLayout {
         mValueAnimator.start();
     }
 
+
+
     public MaxPullUpScrollView(@NonNull Context context) {
         this(context, null);
     }
@@ -209,10 +202,6 @@ public class MaxPullUpScrollView extends FrameLayout {
         }
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -227,46 +216,23 @@ public class MaxPullUpScrollView extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 mDownY = ev.getRawY();
                 mLastY = ev.getRawY();
+                mLastScrollY1 = 0;
+                mLastScrollY2 = 0;
                 isFling = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float distance = ev.getRawY() - mLastY;
-                int scrollY = mInnerScrollView == null ? getScrollY() : mInnerScrollView.getScrollY();
-                if (getMeasuredHeight() < maxHeight || (distance > 0 && scrollY <= 0)) {
-                    getLayoutParams().height = Math.min(Math.max(mMinHeight, Math.min((int) (getMeasuredHeight() - distance), maxHeight)), maxHeight);
-                    requestLayout();
-                    if (mInnerScrollView != null) {
-                        mInnerScrollView.scrollTo(0, 0);
-                    } else {
-                        scrollTo(0, 0);
-                    }
-                } else {
-                    if (mContentHeight > maxHeight) {
-                        if (scrollY - distance < mContentHeight - maxHeight) {
-                            if (mInnerScrollView != null) {
-                                mInnerScrollView.scrollBy(0, (int) -distance);
-                            } else {
-                                scrollBy(0, (int) -distance);
-                            }
-                        } else {
-                            if (mInnerScrollView != null) {
-                                mInnerScrollView.scrollTo(0, mContentHeight - maxHeight);
-                            } else {
-                                scrollTo(0, mContentHeight - maxHeight);
-                            }
-                        }
-                    }
-                }
+                drag(ev);
+                markSpeedPoint(ev);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!isFling && mAutoAlign) {
                     //   注意点击事件有限极高，可能还没重新布局测量
-                    if (getLayoutParams().height < maxHeight) {
-                        if (mLastScrollTimeY2 - mLastScrollTimeY1 < 0) {
-                            reset(mMinHeight - getLayoutParams().height);
-                        } else {
+                    if (getLayoutParams().height < maxHeight && getLayoutParams().height > 0) {
+                        if (ev.getRawY() - mDownY < 0) {
                             reset((maxHeight - getLayoutParams().height));
+                        } else {
+                            reset(mMinHeight - getLayoutParams().height);
                         }
                     }
                 }
@@ -275,6 +241,45 @@ public class MaxPullUpScrollView extends FrameLayout {
         mLastY = ev.getRawY();
         super.dispatchTouchEvent(ev);
         return true;
+    }
+
+    private void markSpeedPoint(MotionEvent ev) {
+        mLastScrollY1 = mLastScrollY2;
+        mLastScrollTimeY1 = mLastScrollTimeY2;
+        mLastScrollTimeY2 = ev.getEventTime();
+        mLastScrollY2 = ev.getRawY();
+    }
+
+
+    private void drag(MotionEvent ev) {
+        int maxHeight = Math.min(mContentHeight, mMaxHeight);
+        float distance = ev.getRawY() - mLastY;
+        int scrollY = mInnerScrollView == null ? getScrollY() : mInnerScrollView.getScrollY();
+        if (getMeasuredHeight() < maxHeight || (distance > 0 && scrollY <= 0)) {
+            getLayoutParams().height = Math.min(Math.max(mMinHeight, Math.min((int) (getMeasuredHeight() - distance), maxHeight)), maxHeight);
+            requestLayout();
+            if (mInnerScrollView != null) {
+                mInnerScrollView.scrollTo(0, 0);
+            } else {
+                scrollTo(0, 0);
+            }
+        } else {
+            if (mContentHeight > maxHeight) {
+                if (scrollY - distance < mContentHeight - maxHeight) {
+                    if (mInnerScrollView != null) {
+                        mInnerScrollView.scrollBy(0, (int) -distance);
+                    } else {
+                        scrollBy(0, (int) -distance);
+                    }
+                } else {
+                    if (mInnerScrollView != null) {
+                        mInnerScrollView.scrollTo(0, mContentHeight - maxHeight);
+                    } else {
+                        scrollTo(0, mContentHeight - maxHeight);
+                    }
+                }
+            }
+        }
     }
 
     /**
